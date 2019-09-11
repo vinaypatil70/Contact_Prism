@@ -1,0 +1,198 @@
+﻿<Window x:Class="PrismMVVMTestProject.Views.ContactView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PrismMVVMTestProject.Views"
+        xmlns:con="clr-namespace:PrismMVVMTestProject.Converters"
+        xmlns:enum="clr-namespace:PrismMVVMTestProject.Enums"
+        xmlns:prop ="clr-namespace:PrismMVVMTestProject.Properties"
+        mc:Ignorable="d"
+        Title="TestView"  Height="600" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="customLabel" TargetType="Label">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+            <con:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <TabControl x:Name="tabContacts" SelectedIndex="{Binding TabSelectedIndex}">
+            <TabControl.Resources>
+                <Style x:Key="ImageStyle" TargetType="{x:Type Image}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BitmapEffect">
+                                <Setter.Value>
+                                    <OuterGlowBitmapEffect GlowColor="Gold" 
+                                                           GlowSize="8"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+
+                <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
+                    <Style.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="BitmapEffect">
+                                <Setter.Value>
+                                    <OuterGlowBitmapEffect GlowColor="Red" 
+                                                           GlowSize="8"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Name="tabMyContacts" Header="My Contacts">
+                <DataGrid x:Name="grdContacts" Margin="10" ItemsSource="{Binding Contacts}" AutoGenerateColumns="True"/>
+            </TabItem>
+            <TabItem Name="tabListView" Header="Contacts List">
+                <ListView x:Name="listContacts" ItemsSource="{Binding Contacts}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Setter Property="Background" Value="Pink" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Gender}" Value="Male">
+                                                <Setter Property="Background" Value="Blue" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding PhotoUri}" Height="120"/>
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1} {2}">
+                                                <Binding Path="FirstName" />
+                                                <Binding Path="MiddleName"/>
+                                                <Binding Path="LastName"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DOB}"/>
+                                    <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding PhoneNumber}"/>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+            <TabItem x:Name="tabAddContact" Header="Add Contact" IsSelected="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="First Name" Style="{StaticResource customLabel}" />
+                    <TextBox x:Name="txtFirstName" Grid.Row="1" Width="160" Height="30" VerticalContentAlignment="Center" Text="{Binding Contact.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Grid.Column="1" Content="Middle Name" Style="{StaticResource customLabel}"/>
+                    <TextBox x:Name="txtMiddleName" Grid.Row="1" Grid.Column="1" Width="160" Height="30" VerticalContentAlignment="Center" Text="{Binding Contact.MiddleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Label Grid.Column="2" Content="Last Name" Style="{StaticResource customLabel}"/>
+                    <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="2" Width="160" Height="30" VerticalContentAlignment="Center" Text="{Binding Contact.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Border Grid.Column="3" Margin="5" CornerRadius="10" Grid.RowSpan="4" BorderThickness="1" BorderBrush="Gray">
+                        <Image x:Name="imgPhoto" Margin="10" Stretch="Fill" Source="{Binding Contact.PhotoUri}"/>
+                    </Border>
+                    <Button Grid.Column="2" Grid.Row="3" Height="30" Width="90" Content="Browse..." Margin="48,5,48,0" VerticalAlignment="Top" Command="{Binding cmdBrowser}"/>
+
+                    <Label Grid.Row="2" Content="Full Name:" Foreground="Gray" />
+                    <TextBlock Grid.Row="2" Grid.Column="1" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding Contact.FullName, Mode=OneWay}"/>
+
+
+                    <Label Grid.Row="3" Content="Gender :"  />
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                        <RadioButton x:Name="rdbMale" Margin="5 0" IsChecked="{Binding Contact.Gender, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enum:Gender.Male}}" Content="Male" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <RadioButton Content="Female" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Contact.Gender, Mode=TwoWay, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static enum:Gender.Female}}"/>
+                    </StackPanel>
+
+                    <Label Grid.Row="4" Grid.Column="2" Content="DOB :" />
+                    <DatePicker x:Name="dateDOB" Grid.Row="4" Grid.Column="3" Margin="5 0" VerticalAlignment="Center" SelectedDate="{Binding Contact.DOB}"/>
+
+                    <Label Grid.Row="4" Content="Mobile Number :" />
+                    <Grid Margin="0 10 10 0" Grid.Row="4" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="cmbCountryCode" Width="50" SelectedIndex="0" Height="30" ItemsSource="{Binding Countries}" VerticalContentAlignment="Center">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="{Binding alpha2Code}"/>
+                                        <Label Content="{Binding name}"/>
+                                        <Image Source="{Binding flag}" Width="10" Height="10"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBox x:Name="txtPhoneNumber" Grid.Column="1" Margin="5 0 0 0" Height="30" VerticalContentAlignment="Center" MaxLength="10" Text="{Binding Contact.PhoneNumber}"/>
+                    </Grid>
+
+                    <Label Grid.Row="5" Grid.Column="2" Content="Age :"  />
+                    <Label x:Name="txtAge" Grid.Row="5" Grid.Column="3" VerticalAlignment="Center" Content="{Binding Contact.Age}"/>
+
+                    <Label Grid.Row="5" Margin="0 10 0 0" Content="Current Address :" />
+                    <TextBox x:Name="txtCurrentAddress" Grid.Row="5" Grid.RowSpan="2" Grid.Column="1" Margin="0 10 10 0" Text="{Binding Contact.CurrentAddress}"/>
+
+                    <Label Grid.Row="6" Grid.Column="2" Content="Marital Status :"/>
+                    <ComboBox x:Name="cmbMaritalStatus" Grid.Row="6" Grid.Column="3" Width="150" Height="30" VerticalContentAlignment="Center" SelectedItem="{Binding Contact.MaritalStatus}" ItemsSource="{Binding MaritalStatus}"/>
+
+                    <CheckBox Grid.Row="7" Grid.Column="1" Content="Both address same." HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Contact.IsBothAddressSame}"/>
+                    <GroupBox Header="Height" Grid.Row="7" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5 0">
+                        <StackPanel VerticalAlignment="Center">
+                            <Slider x:Name="sldHeight" Margin="20 0" Minimum="2" Maximum="8" Value="{Binding Contact.Height}"/>
+                            <Label Content="{Binding Value, ElementName=sldHeight}" ContentStringFormat="{}{0:0.## Feet}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <Label Grid.Row="8" Margin="0 10 0 0" Content="Permanant Address :" />
+                    <TextBox x:Name="txtPermanantAddress" Grid.Row="8" Grid.RowSpan="2" Grid.Column="1" TextWrapping="Wrap" Margin="0 10 10 0" Text="{Binding Contact.PermanantAddress}"/>
+
+                    <Separator Grid.Row="3" Grid.RowSpan="7" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+
+                    <Button x:Name="btnSubmit" Margin="0 10" Grid.Row="10" Grid.Column="1" Width="120" Content="Submit" Command="{Binding cmdSaveContact}"/>
+
+                    <Button x:Name="btnReset" Margin="0 10" Grid.Row="10" Width="120" Grid.Column="2" Content="Reset" Command="{Binding cmdReset}"/>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="1">
+            <Button Margin="0 0 10 0" Content="Delete All" Width="100" Height="40" HorizontalAlignment="Right" Command="{Binding cmdDeleteAll}"/>
+        </Grid>
+    </Grid>
+</Window>
