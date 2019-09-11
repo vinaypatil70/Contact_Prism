@@ -141,7 +141,7 @@ namespace PrismMVVMTestProject.ViewModels
         {
             if (Contact != null)
             {
-                if (!string.IsNullOrEmpty(Contact.FirstName) && !string.IsNullOrEmpty(Contact.MiddleName) && !string.IsNullOrEmpty(Contact.LastName))
+                if (!string.IsNullOrEmpty(Contact.FirstName) && !string.IsNullOrEmpty(Contact.MiddleName) && !string.IsNullOrEmpty(Contact.LastName) && !string.IsNullOrEmpty(Contact.PhoneNumber))
                 {
                     return true;
                 }
