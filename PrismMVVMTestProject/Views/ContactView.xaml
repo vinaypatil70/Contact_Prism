@@ -8,7 +8,7 @@
         xmlns:enum="clr-namespace:PrismMVVMTestProject.Enums"
         xmlns:prop ="clr-namespace:PrismMVVMTestProject.Properties"
         mc:Ignorable="d"
-        Title="TestView"  Height="600" Width="800">
+        Title="TestView" Height="600" Width="800">
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="customLabel" TargetType="Label">
@@ -117,7 +117,8 @@
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
-                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Label Content="First Name" Style="{StaticResource customLabel}" />
                     <TextBox x:Name="txtFirstName" Grid.Row="1" Width="160" Height="30" VerticalContentAlignment="Center" Text="{Binding Contact.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -153,9 +154,8 @@
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding alpha2Code}"/>
+                                        <Label Content="{Binding code}"/>
                                         <Label Content="{Binding name}"/>
-                                        <Image Source="{Binding flag}" Width="10" Height="10"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
@@ -183,11 +183,39 @@
                     <TextBox x:Name="txtPermanantAddress" Grid.Row="8" Grid.RowSpan="2" Grid.Column="1" TextWrapping="Wrap" Margin="0 10 10 0" Text="{Binding Contact.PermanantAddress}"/>
 
                     <Separator Grid.Row="3" Grid.RowSpan="7" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                    <StackPanel Grid.Row="10" Orientation="Horizontal">
+                        <TextBlock Text="Contry" VerticalAlignment="Center"/>
+                        <ComboBox Margin="10 0 0 0" Width="120" Height="30" ItemsSource="{Binding Countries}" SelectedIndex="0" SelectedItem="{Binding SelectedCountry}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel  Grid.Column="1" Grid.Row="10" Orientation="Horizontal">
+                        <TextBlock Text="State" VerticalAlignment="Center"/>
+                        <ComboBox Margin="10 0 0 0" Width="120" Height="30" ItemsSource="{Binding Regions}" SelectedIndex="0" SelectedItem="{Binding SelectedRegion}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding region}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel  Grid.Column="2" Grid.Row="10" Orientation="Horizontal">
+                        <TextBlock Text="City" VerticalAlignment="Center"/>
+                        <ComboBox Margin="10 0 0 0" Width="120" Height="30" ItemsSource="{Binding Cities}" SelectedIndex="0" SelectedItem="{Binding SelectedCity}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding city}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
 
-                    <Button x:Name="btnSubmit" Margin="0 10" Grid.Row="10" Grid.Column="1" Width="120" Content="Submit" Command="{Binding cmdSaveContact}"/>
-
-                    <Button x:Name="btnReset" Margin="0 10" Grid.Row="10" Width="120" Grid.Column="2" Content="Reset" Command="{Binding cmdReset}"/>
-
+                    <Button x:Name="btnSubmit" Margin="0 10" Grid.Row="11" Grid.Column="1" Width="120" Content="Submit" Command="{Binding cmdSaveContact}"/>
+                    <Button x:Name="btnReset" Margin="0 10" Grid.Row="11" Width="120" Grid.Column="2" Content="Reset" Command="{Binding cmdReset}"/>
                 </Grid>
             </TabItem>
         </TabControl>

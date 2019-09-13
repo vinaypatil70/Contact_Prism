@@ -8,8 +8,22 @@ namespace PrismMVVMTestProject.Models
 {
     public class Country
     {
-        public string alpha2Code { get; set; }
         public string name { get; set; }
-        public string flag { get; set; }
+        public string code { get; set; }
+    }
+
+    public class Region
+    {
+        public string region { get; set; }
+        public string country { get; set; }
+    }
+
+    public class City
+    {
+        public string city { get; set; }
+        public string region { get; set; }
+        public string country { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
     }
 }

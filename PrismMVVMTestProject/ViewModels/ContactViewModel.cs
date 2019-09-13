@@ -20,7 +20,7 @@ namespace PrismMVVMTestProject.ViewModels
     class ContactViewModel : BindableBase
     {
         string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Contacts.json";
-        
+
         private Contact contact;
         public Contact Contact
         {
@@ -50,6 +50,58 @@ namespace PrismMVVMTestProject.ViewModels
             set { SetProperty(ref countries, value); }
         }
 
+        private Country selectedCountry;
+        public Country SelectedCountry
+        {
+            get { return selectedCountry; }
+            set
+            {
+                SetProperty(ref selectedCountry, value);
+                PopulateRegions(value);
+            }
+        }
+
+        private ObservableCollection<Region> regions;
+        public ObservableCollection<Region> Regions
+        {
+            get { return regions; }
+            set { SetProperty(ref regions, value); }
+        }
+
+        private Region selectedRegion;
+        public Region SelectedRegion
+        {
+            get { return selectedRegion; }
+            set
+            {
+                if (value != null)
+                {
+                    SetProperty(ref selectedRegion, value);
+                    PopulateCities(value);
+                }
+            }
+        }
+
+        private ObservableCollection<City> cities;
+        public ObservableCollection<City> Cities
+        {
+            get { return cities; }
+            set { SetProperty(ref cities, value); }
+        }
+
+        private City selectedCity;
+        public City SelectedCity
+        {
+            get { return selectedCity; }
+            set
+            {
+                if (value != null)
+                {
+                    SetProperty(ref selectedCity, value);
+                }
+            }
+        }
+
         public IList<MaritalStatus> MaritalStatus
         {
             get
@@ -62,7 +114,7 @@ namespace PrismMVVMTestProject.ViewModels
         public RelayCommand cmdReset { get; set; }
         public RelayCommand cmdBrowser { get; set; }
         public RelayCommand cmdDeleteAll { get; set; }
-        
+
         public ContactViewModel()
         {
             this.cmdSaveContact = new RelayCommand(SaveContact);
@@ -81,7 +133,7 @@ namespace PrismMVVMTestProject.ViewModels
               "Portable Network Graphic (*.png)|*.png";
             if (op.ShowDialog() == true)
             {
-                Contact.PhotoUri = op.FileName; 
+                Contact.PhotoUri = op.FileName;
             }
         }
 
@@ -107,7 +159,7 @@ namespace PrismMVVMTestProject.ViewModels
         {
             ObservableCollection<Country> countries = new ObservableCollection<Country>();
             HttpClient objClient = new HttpClient();
-            HttpResponseMessage response = await objClient.GetAsync("https://restcountries.eu/rest/v2/all");
+            HttpResponseMessage response = await objClient.GetAsync("http://battuta.medunes.net/api/country/all/?key=1e46f1476755626ad3bbe36742ccaa8d");
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 string result = await response.Content.ReadAsStringAsync();
@@ -115,6 +167,28 @@ namespace PrismMVVMTestProject.ViewModels
             }
 
             return countries;
+        }
+
+        private async void PopulateRegions(Country value)
+        {
+            HttpClient objClient = new HttpClient();
+            HttpResponseMessage response = await objClient.GetAsync("http://battuta.medunes.net/api/region/" + value.code + "/all/?key=1e46f1476755626ad3bbe36742ccaa8d");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                string result = await response.Content.ReadAsStringAsync();
+                Regions = new ObservableCollection<Region>(Newtonsoft.Json.JsonConvert.DeserializeObject<List<Region>>(result));
+            }
+        }
+
+        private async void PopulateCities(Region value)
+        {
+            HttpClient objClient = new HttpClient();
+            HttpResponseMessage response = await objClient.GetAsync("http://battuta.medunes.net/api/city/" + value.country + "/search/?region=" + value.region + "&key=1e46f1476755626ad3bbe36742ccaa8d");
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                string result = await response.Content.ReadAsStringAsync();
+                Cities = new ObservableCollection<City>(Newtonsoft.Json.JsonConvert.DeserializeObject<List<City>>(result));
+            }
         }
 
         private void SaveContact()
@@ -168,7 +242,7 @@ namespace PrismMVVMTestProject.ViewModels
                 System.IO.File.Delete(filePath);
                 Contacts = LoadContacts();
             }
-            
+
         }
     }
 }
