@@ -35,7 +35,6 @@ namespace PrismMVVMTestProject.ViewModels
             set { SetProperty(ref tabSelectedIndex, value); }
         }
 
-
         private ObservableCollection<Contact> contacts;
         public ObservableCollection<Contact> Contacts
         {
