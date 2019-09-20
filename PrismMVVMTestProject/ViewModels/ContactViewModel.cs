@@ -1,5 +1,7 @@
 ﻿using PrismMVVMTestProject.Models;
+using PrismMVVMTestProject.Enums;
 using Prism.Mvvm;
+using Prism.Commands;
 using System.Collections.ObjectModel;
 using System;
 using System.Net.Http;
@@ -7,9 +9,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using GalaSoft.MvvmLight.Command;
 using System.Windows;
-using PrismMVVMTestProject.Enums;
+
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using PrismMVVMTestProject.Properties;
@@ -109,17 +110,17 @@ namespace PrismMVVMTestProject.ViewModels
             }
         }
 
-        public RelayCommand cmdSaveContact { get; set; }
-        public RelayCommand cmdReset { get; set; }
-        public RelayCommand cmdBrowser { get; set; }
-        public RelayCommand cmdDeleteAll { get; set; }
+        public ICommand cmdSaveContact { get; set; }
+        public ICommand cmdReset { get; set; }
+        public ICommand cmdBrowser { get; set; }
+        public ICommand cmdDeleteAll { get; set; }
 
         public ContactViewModel()
         {
-            this.cmdSaveContact = new RelayCommand(SaveContact);
-            this.cmdReset = new RelayCommand(Reset);
-            this.cmdBrowser = new RelayCommand(Browser);
-            this.cmdDeleteAll = new RelayCommand(DeleteAll);
+            this.cmdSaveContact = new DelegateCommand(SaveContact);
+            this.cmdReset = new DelegateCommand(Reset);
+            this.cmdBrowser = new DelegateCommand(Browser);
+            this.cmdDeleteAll = new DelegateCommand(DeleteAll);
             Load();
         }
 
